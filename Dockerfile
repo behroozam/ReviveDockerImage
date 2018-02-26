@@ -1,13 +1,11 @@
 FROM alpine
-MAINTAINER krish512 <krish512@hotmail.com>
+MAINTAINER behroozam <b.hasanbg@gmail.com>
 
 WORKDIR /var/www/html
 
 RUN apk --update upgrade && apk update && apk add curl ca-certificates && update-ca-certificates --fresh && apk add openssl
-
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories 
 RUN apk --update add \
-    --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
-    --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
         nginx \
         gzip \
         php7 \
