@@ -8,6 +8,7 @@ RUN echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/reposit
 RUN apk --update add \
         nginx \
         gzip \
+        git \
         php7 \
         php7-dom \
         php7-ctype \
@@ -29,17 +30,19 @@ RUN apk --update add \
         php7-iconv \
         php7-phar \
         php7-openssl \
+        php7-zip \
         php7-zlib \
     && rm -rf /var/cache/apk/*
 
-RUN wget -qO- https://download.revive-adserver.com/revive-adserver-4.1.3.tar.gz | tar xz --strip 1 \
+RUN wget -qO- https://download.revive-adserver.com/revive-adserver-4.1.4.tar.gz | tar xz --strip 1 \
     && chown -R nobody:nobody . \
     && rm -rf /var/cache/apk/*
-
+RUN rm -rf composer.lock
+COPY composer.phar .
+RUN php composer.phar install
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-
 RUN mkdir -p /run/nginx
-
+COPY php/php.ini /etc/php7/php.ini
+COPY php/www.conf /etc/php7/php-fpm.d/www.conf
 EXPOSE 80
-
 CMD php-fpm7 && nginx -g 'daemon off;'
