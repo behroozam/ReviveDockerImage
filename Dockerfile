@@ -41,7 +41,7 @@ RUN rm -rf composer.lock
 COPY composer.phar .
 RUN php composer.phar install
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-RUN mkdir -p /run/nginx
+RUN mkdir -p /run/nginx && chown -R nobody:nobody /var/tmp/nginx
 COPY php/php.ini /etc/php7/php.ini
 COPY php/www.conf /etc/php7/php-fpm.d/www.conf
 EXPOSE 80
